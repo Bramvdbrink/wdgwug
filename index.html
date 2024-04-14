@@ -48,7 +48,7 @@
     const goal = document.getElementById('goal');
     const obstacles = [];
 
-    // Voeg minimaal 10 bewegende obstakels toe
+    // Voeg 10 horizontale obstakels toe
     for (let i = 0; i < 10; i++) {
         const obstacle = document.createElement('div');
         obstacle.className = 'obstacle';
@@ -57,18 +57,42 @@
         container.appendChild(obstacle);
         obstacles.push(obstacle);
 
-        // Beweging van de obstakels
-        const step = 5;
-        let direction = 1;
+        // Beweging van de horizontale obstakels
+        const stepHorizontal = 5;
+        let directionHorizontal = 1;
         setInterval(function() {
             const obstacleRect = obstacle.getBoundingClientRect();
             const containerRect = container.getBoundingClientRect();
 
             if (obstacleRect.left <= containerRect.left || obstacleRect.right >= containerRect.right) {
-                direction *= -1;
+                directionHorizontal *= -1;
             }
 
-            obstacle.style.left = (parseInt(obstacle.style.left) + step * direction) + 'px';
+            obstacle.style.left = (parseInt(obstacle.style.left) + stepHorizontal * directionHorizontal) + 'px';
+        }, 100);
+    }
+
+    // Voeg 10 verticale obstakels toe
+    for (let i = 0; i < 10; i++) {
+        const obstacle = document.createElement('div');
+        obstacle.className = 'obstacle';
+        obstacle.style.left = Math.floor(Math.random() * (container.clientWidth - 20)) + 'px';
+        obstacle.style.top = Math.floor(Math.random() * (container.clientHeight - 20)) + 'px';
+        container.appendChild(obstacle);
+        obstacles.push(obstacle);
+
+        // Beweging van de verticale obstakels
+        const stepVertical = 5;
+        let directionVertical = 1;
+        setInterval(function() {
+            const obstacleRect = obstacle.getBoundingClientRect();
+            const containerRect = container.getBoundingClientRect();
+
+            if (obstacleRect.top <= containerRect.top || obstacleRect.bottom >= containerRect.bottom) {
+                directionVertical *= -1;
+            }
+
+            obstacle.style.top = (parseInt(obstacle.style.top) + stepVertical * directionVertical) + 'px';
         }, 100);
     }
 
