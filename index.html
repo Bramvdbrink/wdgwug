@@ -38,12 +38,14 @@
 
 <div id="container">
   <div id="ball"></div>
+  <div id="goal"></div>
 </div>
 
 <script>
   document.addEventListener("DOMContentLoaded", function() {
     const container = document.getElementById('container');
     const ball = document.getElementById('ball');
+    const goal = document.getElementById('goal');
     const obstacles = [];
 
     // Voeg minimaal 10 bewegende obstakels toe
@@ -56,23 +58,17 @@
         obstacles.push(obstacle);
 
         // Beweging van de obstakels
+        const step = 5;
+        let direction = 1;
         setInterval(function() {
-            const direction = Math.floor(Math.random() * 4);
-            const step = 5;
-            switch (direction) {
-                case 0:
-                    obstacle.style.top = Math.max(parseInt(obstacle.style.top) - step, 0) + 'px'; // Up
-                    break;
-                case 1:
-                    obstacle.style.top = Math.min(parseInt(obstacle.style.top) + step, container.clientHeight - 20) + 'px'; // Down
-                    break;
-                case 2:
-                    obstacle.style.left = Math.max(parseInt(obstacle.style.left) - step, 0) + 'px'; // Left
-                    break;
-                case 3:
-                    obstacle.style.left = Math.min(parseInt(obstacle.style.left) + step, container.clientWidth - 20) + 'px'; // Right
-                    break;
+            const obstacleRect = obstacle.getBoundingClientRect();
+            const containerRect = container.getBoundingClientRect();
+
+            if (obstacleRect.left <= containerRect.left || obstacleRect.right >= containerRect.right) {
+                direction *= -1;
             }
+
+            obstacle.style.left = (parseInt(obstacle.style.left) + step * direction) + 'px';
         }, 100);
     }
 
@@ -96,6 +92,12 @@
             case 'ArrowRight':
                 ballLeft = Math.min(ballLeft + 10, container.clientWidth - ball.clientWidth); // Controleer de rechter rand
                 break;
+        }
+
+        // Controleer of de bal het doel heeft bereikt
+        if (ballLeft === parseInt(getComputedStyle(goal).left) && ballTop === parseInt(getComputedStyle(goal).top)) {
+            alert('Gefeliciteerd! Je hebt gewonnen!'); // Toon melding als de bal het doel bereikt
+            return;
         }
 
         // Controleer of de bal een obstakel raakt
